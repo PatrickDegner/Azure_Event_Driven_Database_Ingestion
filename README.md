@@ -5,6 +5,8 @@ A Project for Event Driven Data Ingestion with Azure
 
 Want some live data in your database? This is just one of many ways created in Azure.
 
+New data will become available in your database just microseconds after the creation.
+
 </br>
 
 ## How it works

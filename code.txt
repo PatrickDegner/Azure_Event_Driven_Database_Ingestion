@@ -1,0 +1,167 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Delete_blob_(V2)": {
+                "inputs": {
+                    "headers": {
+                        "SkipDeleteIfFileNotFoundOnServer": false
+                    },
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['azureblob']['connectionId']"
+                        }
+                    },
+                    "method": "delete",
+                    "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('AccountNameFromSettings'))}/files/@{encodeURIComponent(encodeURIComponent(uriPath(triggerBody()?['data'].url)))}"
+                },
+                "runAfter": {
+                    "Insert_row_(V2)": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "ApiConnection"
+            },
+            "Get_blob_content_using_path_(V2)": {
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['azureblob']['connectionId']"
+                        }
+                    },
+                    "method": "get",
+                    "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('AccountNameFromSettings'))}/GetFileContentByPath",
+                    "queries": {
+                        "inferContentType": false,
+                        "path": "@{uriPath(triggerBody()?['data'].url)}",
+                        "queryParametersSingleEncoded": true
+                    }
+                },
+                "runAfter": {},
+                "type": "ApiConnection"
+            },
+            "Insert_row_(V2)": {
+                "inputs": {
+                    "body": {
+                        "create_time": "@{utcNow()}",
+                        "customer_id": "@body('Parse_JSON')?['customer_id']",
+                        "item_name": "@body('Parse_JSON')?['item_name']",
+                        "item_price": "@body('Parse_JSON')?['item_price']",
+                        "order_amount": "@body('Parse_JSON')?['order_amount']",
+                        "order_id": "@body('Parse_JSON')?['order_id']",
+                        "payment_provider": "@body('Parse_JSON')?['payment_provider']"
+                    },
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['sql']['connectionId']"
+                        }
+                    },
+                    "method": "post",
+                    "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default'))},@{encodeURIComponent(encodeURIComponent('default'))}/tables/@{encodeURIComponent(encodeURIComponent('[dbo].[orders]'))}/items"
+                },
+                "runAfter": {
+                    "Parse_JSON": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "ApiConnection"
+            },
+            "Parse_JSON": {
+                "inputs": {
+                    "content": "@json(body('Get_blob_content_using_path_(V2)'))",
+                    "schema": {
+                        "properties": {
+                            "customer_id": {
+                                "type": "string"
+                            },
+                            "item_name": {
+                                "type": "string"
+                            },
+                            "item_price": {
+                                "type": "integer"
+                            },
+                            "order_amount": {
+                                "type": "integer"
+                            },
+                            "order_id": {
+                                "type": "string"
+                            },
+                            "payment_provider": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "runAfter": {
+                    "Get_blob_content_using_path_(V2)": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "ParseJson"
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "parameters": {
+            "$connections": {
+                "defaultValue": {},
+                "type": "Object"
+            }
+        },
+        "triggers": {
+            "When_a_resource_event_occurs": {
+                "inputs": {
+                    "body": {
+                        "properties": {
+                            "destination": {
+                                "endpointType": "webhook",
+                                "properties": {
+                                    "endpointUrl": "@{listCallbackUrl()}"
+                                }
+                            },
+                            "filter": {
+                                "includedEventTypes": [
+                                    "Microsoft.Storage.BlobCreated"
+                                ]
+                            },
+                            "topic": "/subscriptions/{subscriptionid}/resourceGroups/patricks-rg/providers/Microsoft.Storage/storageAccounts/patricksstore"
+                        }
+                    },
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['azureeventgrid']['connectionId']"
+                        }
+                    },
+                    "path": "/subscriptions/@{encodeURIComponent('{subscriptionid}')}/providers/@{encodeURIComponent('Microsoft.Storage.StorageAccounts')}/resource/eventSubscriptions",
+                    "queries": {
+                        "x-ms-api-version": "2017-09-15-preview"
+                    }
+                },
+                "splitOn": "@triggerBody()",
+                "type": "ApiConnectionWebhook"
+            }
+        }
+    },
+    "parameters": {
+        "$connections": {
+            "value": {
+                "azureblob": {
+                    "connectionId": "/subscriptions/{subscriptionid}/resourceGroups/patricks-rg/providers/Microsoft.Web/connections/azureblob",
+                    "connectionName": "azureblob",
+                    "id": "/subscriptions/{subscriptionid}/providers/Microsoft.Web/locations/westeurope/managedApis/azureblob"
+                },
+                "azureeventgrid": {
+                    "connectionId": "/subscriptions/{subscriptionid}/resourceGroups/patricks-rg/providers/Microsoft.Web/connections/azureeventgrid",
+                    "connectionName": "azureeventgrid",
+                    "id": "/subscriptions/{subscriptionid}/providers/Microsoft.Web/locations/westeurope/managedApis/azureeventgrid"
+                },
+                "sql": {
+                    "connectionId": "/subscriptions/{subscriptionid}/resourceGroups/patricks-rg/providers/Microsoft.Web/connections/sql-3",
+                    "connectionName": "sql-3",
+                    "id": "/subscriptions/{subscriptionid}/providers/Microsoft.Web/locations/westeurope/managedApis/sql"
+                }
+            }
+        }
+    }
+}

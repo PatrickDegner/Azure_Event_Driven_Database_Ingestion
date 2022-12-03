@@ -5,7 +5,7 @@ A Project for Event Driven Data Ingestion with Azure
 
 Want some live data in your database? This is just one of many ways created in Azure.
 
-New data will become available in your database just microseconds after the creation.
+New data will become available in your database just milliseconds after the creation.
 
 </br>
 
@@ -110,7 +110,7 @@ In this gif you can see how I create 25 Orders. 1 every second.
 
 The files will be pushed to Blob Storage and the Workflow will catch them and ingest into the Database.
 
-You can push a file every microsecond. The Workflow will pick them up and ingest.
+You can push a file every millisecond if you want. The Workflow will pick them up and ingest.
 
 
 

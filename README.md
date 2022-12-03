@@ -3,23 +3,23 @@
 # Event driven Database Ingestion
 A Project for Event Driven Data Ingestion with Azure
 
-Want some Live data in your database? This is just one of many ways made in Azure.
+Want some live data in your database? This is just one of many ways created in Azure.
 
 </br>
 
 ## How it works
 
-I made a Python Tool to fake Orders coming from an api as json files and being uploaded to Azure Blob Storage
+I made a Python Tool to fake orders coming from an "fake-api" as json files and being uploaded to Azure Blob Storage
 
-[This is my repo i used](https://github.com/PatrickDegner/FakeOrderDatabaseEntry)
+[This is my repo I have used](https://github.com/PatrickDegner/FakeOrderDatabaseEntry)
 
-In this project im using Azure Logic Apps with Event Grid to capture the Eventdata.
+In this project I am using Azure Logic Apps with Event Grid to capture the Eventdata.
 
-1. Data will be uploaded to container
+1. Data will be uploaded to a container
 2. Event Grid will trigger the Workflow
-3. The json will be read and the data ingested into an Azure SQL Database
+3. The json file will be read and the data ingested into an Azure SQL Database
 
-4. Profit! We have Live Data in our Relational Database!
+4. Profit! We have Live-Data in our Relational Database!
 
 
 </br>
@@ -35,7 +35,7 @@ Use the code of this repo or just follow along.
 
 Create a table in your database.
 
-This data is for testing only thats why I also dont create any kind of database schema.
+This data is for testing only, thats why I also dont create any kind of database schema.
 
 ![table_create](https://user-images.githubusercontent.com/108484798/205465405-ec6b6f23-62a3-481a-890e-48715cb1679b.png)
 

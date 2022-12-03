@@ -1,4 +1,4 @@
-# Eventbased Database Ingestion
+# Event based Database Ingestion
 A Project for Event Driven Data Ingestion with Azure
 
 Want some Live data in your database? This is just one of many ways made in Azure.

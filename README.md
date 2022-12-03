@@ -30,7 +30,14 @@ Use the code of this repo or just follow along.
 - Create a SQL Database
 - Create a Storage account
 
-First the Eventgrid to find any change in the Blobstorage.
+
+Create a table in your database.
+
+This data is for testing only thats why I also dont create any kind of database schema.
+
+![table_create](https://user-images.githubusercontent.com/108484798/205465405-ec6b6f23-62a3-481a-890e-48715cb1679b.png)
+
+Then the Eventgrid to find any change in the Blobstorage.
 
 ![eventgrid](https://user-images.githubusercontent.com/108484798/205463746-84cd95ca-0a44-4487-87a6-dc2b06aff8ac.png)
 
